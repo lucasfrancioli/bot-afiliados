@@ -1,5 +1,5 @@
 {
-  "discoveryTimes": ["09:00", "14:00", "20:00"],
+  "discoveryTimes": ["09:00", "12:00", "16:00", "20:00"],
   "timezone": "America/Sao_Paulo",
   "note": "Horários em que a descoberta de ofertas (navegação assistida) roda. Edite livremente ou peça pro Claude ajustar."
 }
