@@ -2,6 +2,7 @@ import { config } from "./config.js";
 import { loadDiscoveredOffers } from "./scrapers/offers-input.js";
 import { filterOffers } from "./scrapers/filter.js";
 import { toAffiliateLink } from "./affiliate/mercadolivre.js";
+import { generateContentForOffer } from "./content/generate.js";
 
 async function main() {
   const args = process.argv.slice(2);
@@ -50,7 +51,11 @@ async function runDiscoveryBatch(inputPath: string) {
     const link = toAffiliateLink(offer.permalink, config.ml.mattWord, config.ml.mattTool);
     console.log(`- ${offer.title}`);
     console.log(`  R$ ${offer.price} (${offer.discountPercent}% off) | nota: ${offer.rating ?? "N/A"} (${offer.reviewsTotal} avaliações)`);
-    console.log(`  ${link}\n`);
+    console.log(`  ${link}`);
+
+    const content = await generateContentForOffer(offer, link);
+    console.log(content.imagePath ? `  Imagem: ${content.imagePath}` : `  Imagem: falhou (${content.imageError})`);
+    console.log(content.copy ? `  Copy:\n${content.copy}\n` : `  Copy: falhou (${content.copyError})\n`);
   }
 }
 
