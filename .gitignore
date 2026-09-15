@@ -3,3 +3,6 @@ dist/
 .env
 *.log
 backend/data/generated/
+backend/data/.wwebjs_auth/
+backend/data/whatsapp-qr.png
+backend/.wwebjs_cache/

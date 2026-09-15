@@ -16,7 +16,7 @@ Sistema que, em horários programados, busca automaticamente ofertas de produtos
       ↓
 [3] Conversão de Link de Afiliado
       ↓
-[4] Geração de Imagem (Nano Banana / Gemini Image)
+[4] Foto real do produto (já capturada na descoberta, sem geração por IA)
       ↓
 [5] Geração da Mensagem (copy de venda via IA)
       ↓
@@ -57,10 +57,9 @@ Esses critérios ficam configuráveis no painel, sem precisar mexer em código.
 
 ---
 
-## 4. Geração de Imagem
+## 4. Imagem do Produto
 
-- Integração com API de geração de imagem (Nano Banana / Gemini Image) para criar a arte promocional a partir da foto do produto + template de layout (preço, desconto, selo).
-- Template padronizado (mesma identidade visual do grupo) com variáveis: título do produto, preço antigo, preço novo, % desconto.
+**Atualização (set/2026):** a geração de imagem por IA (Nano Banana/Gemini Image) foi descartada — travou no billing do Gemini e o usuário decidiu que, como a peça vai para um grupo de WhatsApp, a foto real do produto já é suficiente. Sem overlay, sem template de layout: a etapa só baixa a `thumbnail` capturada na descoberta e usa direto no envio (`backend/src/content/image.ts`).
 
 ## 5. Geração da Mensagem
 
@@ -103,7 +102,7 @@ Como você definiu que será **acessível via navegador**, a estrutura fica assi
 | Comunicação tempo real | **Socket.io** | Atualização ao vivo do status no painel |
 | Frontend/Painel | **React + Vite** | Painel web leve e responsivo |
 | WhatsApp | **whatsapp-web.js** | Biblioteca mais usada para esse tipo de automação não-oficial |
-| Geração de imagem | **API Nano Banana (Gemini Image)** | Já definida por você |
+| Geração de imagem | **Nenhuma — foto real do produto** | Decisão do usuário (set/2026): evita billing e overlay desnecessário para grupo de WhatsApp |
 | Hospedagem | **VPS simples (ex: 2 vCPU/4GB)** | Precisa rodar o navegador headless do WhatsApp 24/7 |
 
 ---
@@ -116,7 +115,7 @@ bot-afiliados/
 │   ├── src/
 │   │   ├── scrapers/          # busca ML e Shopee
 │   │   ├── affiliate/         # conversão de links
-│   │   ├── image-gen/         # integração Nano Banana
+│   │   ├── content/           # foto real do produto (sem geração por IA)
 │   │   ├── message-gen/       # geração de copy
 │   │   ├── whatsapp/          # cliente whatsapp-web.js
 │   │   ├── scheduler/         # cron jobs
@@ -138,8 +137,8 @@ bot-afiliados/
 ## 10. Fases de Desenvolvimento
 
 1. **Fase 1 — Núcleo Mercado Livre:** busca de ofertas + conversão de link de afiliado (API oficial) funcionando isoladamente, testado via linha de comando. ✅ em andamento
-2. **Fase 2 — Geração de conteúdo:** integração da imagem (Nano Banana) e da mensagem, ainda sem enviar nada, só gerando os dois.
-3. **Fase 3 — WhatsApp:** conexão do whatsapp-web.js, envio manual disparado por você, testando o delay.
+2. **Fase 2 — Geração de conteúdo:** copy de venda via Gemini + foto real do produto (sem geração de imagem). ✅ concluída
+3. **Fase 3 — WhatsApp:** conexão do whatsapp-web.js, envio manual disparado por você, testando o delay. 🚧 em andamento
 4. **Fase 4 — Agendamento:** liga o cron aos horários definidos, primeira versão end-to-end funcionando.
 5. **Fase 5 — Painel web:** dashboard com status em tempo real, configurações editáveis.
 6. **Fase 6 — Shopee (semi-automatizada):** adiciona a segunda plataforma com o modelo mais manual descrito acima.
