@@ -25,7 +25,7 @@ async function main() {
  * (você já decidiu que quer esse produto) e só gera o link de afiliado.
  */
 function runManualLink(url: string) {
-  const link = toAffiliateLink(url, config.ml.affiliateParamName, config.ml.affiliateParamValue);
+  const link = toAffiliateLink(url, config.ml.mattWord, config.ml.mattTool);
   console.log(`Link de afiliado: ${link}`);
 }
 
@@ -47,11 +47,7 @@ async function runDiscoveryBatch(inputPath: string) {
 
   console.log(`\n${selected.length} oferta(s) selecionada(s):\n`);
   for (const offer of selected) {
-    const link = toAffiliateLink(
-      offer.permalink,
-      config.ml.affiliateParamName,
-      config.ml.affiliateParamValue
-    );
+    const link = toAffiliateLink(offer.permalink, config.ml.mattWord, config.ml.mattTool);
     console.log(`- ${offer.title}`);
     console.log(`  R$ ${offer.price} (${offer.discountPercent}% off) | nota: ${offer.rating ?? "N/A"} (${offer.reviewsTotal} avaliações)`);
     console.log(`  ${link}\n`);

@@ -1,19 +1,19 @@
 /**
- * O programa de afiliados do Mercado Livre gera links anexando um parâmetro
- * de rastreio (nome/valor definidos no painel deles) à URL normal do produto —
- * não existe uma chamada de API por link. Os valores exatos (ML_AFFILIATE_PARAM_NAME/
- * ML_AFFILIATE_PARAM_VALUE) precisam vir de um link de exemplo gerado no seu
- * painel de afiliados (mercadolivre.com.br/afiliados) e ainda não foram confirmados.
+ * Confirmado com um link real gerado no painel de afiliados do usuário
+ * (mercadolivre.com.br/afiliados): o rastreio usa dois parâmetros de query,
+ * matt_word (identifica o afiliado) e matt_tool (identifica o link/ferramenta),
+ * anexados a qualquer URL de produto — não existe chamada de API por link.
  */
 export function toAffiliateLink(
   permalink: string,
-  paramName: string | undefined,
-  paramValue: string | undefined
+  mattWord: string | undefined,
+  mattTool: string | undefined
 ): string {
-  if (!paramName || !paramValue) {
+  if (!mattWord || !mattTool) {
     return permalink;
   }
   const url = new URL(permalink);
-  url.searchParams.set(paramName, paramValue);
+  url.searchParams.set("matt_word", mattWord);
+  url.searchParams.set("matt_tool", mattTool);
   return url.toString();
 }

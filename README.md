@@ -37,7 +37,6 @@ Configuráveis em [`backend/config/schedule.json`](backend/config/schedule.json)
 
 ## Próximos passos
 
-- Confirmar os parâmetros de link de afiliado do Mercado Livre (painel de afiliados)
-- Definir o mecanismo real de disparo automático nos horários de `schedule.json` (depende de manter uma sessão do Claude ativa no notebook — ainda não resolvido)
+- Definir o mecanismo real de disparo automático nos horários de `schedule.json` — vai ser configurado no notebook dedicado à automação, ainda pendente
 - Fase 2: geração de imagem (Nano Banana / Gemini Image) e copy de venda
 - Fase 3+: WhatsApp, agendamento, painel web, Shopee
