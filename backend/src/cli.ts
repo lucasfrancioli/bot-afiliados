@@ -4,7 +4,32 @@ import { filterOffers } from "./scrapers/filter.js";
 import { toAffiliateLink } from "./affiliate/mercadolivre.js";
 
 async function main() {
-  const inputPath = process.argv[2] ?? "data/offers.example.json";
+  const args = process.argv.slice(2);
+  const urlFlagIndex = args.indexOf("--url");
+
+  if (urlFlagIndex !== -1) {
+    const url = args[urlFlagIndex + 1];
+    if (!url) {
+      throw new Error("Use: npm run dev -- --url <link do produto>");
+    }
+    runManualLink(url);
+    return;
+  }
+
+  const inputPath = args[0] ?? "data/offers.example.json";
+  await runDiscoveryBatch(inputPath);
+}
+
+/**
+ * Produto escolhido manualmente por você — pula o filtro de desconto/nota
+ * (você já decidiu que quer esse produto) e só gera o link de afiliado.
+ */
+function runManualLink(url: string) {
+  const link = toAffiliateLink(url, config.ml.affiliateParamName, config.ml.affiliateParamValue);
+  console.log(`Link de afiliado: ${link}`);
+}
+
+async function runDiscoveryBatch(inputPath: string) {
   console.log(`Carregando ofertas de: ${inputPath}`);
   const offers = await loadDiscoveredOffers(inputPath);
   console.log(`${offers.length} oferta(s) carregada(s).`);
