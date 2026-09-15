@@ -1,4 +1,4 @@
-import type { MlOffer } from "./mercadolivre.js";
+import type { MlOffer } from "../types.js";
 
 export interface FilterCriteria {
   minDiscountPercent: number;

@@ -1,14 +1,4 @@
-export interface MlOffer {
-  id: string;
-  title: string;
-  price: number;
-  originalPrice: number | null;
-  discountPercent: number;
-  rating: number | null;
-  reviewsTotal: number;
-  permalink: string;
-  thumbnail: string;
-}
+import type { MlOffer } from "../types.js";
 
 interface MlSearchResult {
   id: string;
@@ -28,9 +18,11 @@ const SEARCH_ENDPOINT = "https://api.mercadolibre.com/sites/MLB/search";
 const REVIEWS_ENDPOINT = "https://api.mercadolibre.com/reviews/item";
 
 /**
- * Busca itens no Mercado Livre via API pública de busca (sem autenticação).
- * Para cada resultado, busca a avaliação em uma chamada separada, já que
- * o endpoint de busca não retorna nota média.
+ * NÃO USADO ATUALMENTE (ver src/scrapers/offers-input.ts).
+ * Desde abril/2025 o Mercado Livre bloqueia /sites/{site}/search para
+ * aplicações comuns (403, com ou sem token) — confirmado em testes. Mantido
+ * caso o acesso seja liberado de volta ou o projeto obtenha aprovação
+ * especial de parceiro no futuro.
  */
 export async function searchOffers(
   query: string,
@@ -46,9 +38,8 @@ export async function searchOffers(
   });
   if (res.status === 403) {
     throw new Error(
-      "Mercado Livre recusou a busca (403). Esse endpoint deixou de aceitar requisições " +
-        "sem autenticação — é necessário um access_token de uma aplicação registrada em " +
-        "developers.mercadolivre.com.br (defina ML_ACCESS_TOKEN no .env)."
+      "Mercado Livre recusou a busca (403). Esse endpoint está bloqueado para aplicações " +
+        "comuns desde abril/2025, independente de token — use src/scrapers/offers-input.ts."
     );
   }
   if (!res.ok) {

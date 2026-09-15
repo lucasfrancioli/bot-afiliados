@@ -45,9 +45,11 @@ Esses critérios ficam configuráveis no painel, sem precisar mexer em código.
 ## 3. Integrações por Plataforma
 
 ### Mercado Livre
-- Possui **API oficial de afiliados** — viável de integrar de forma automatizada.
-- Fluxo: buscar produto → gerar link curto de afiliado via API → armazenar.
-- Requer cadastro no programa de afiliados do Mercado Livre e geração de credenciais (client_id/secret).
+
+**Atualização (set/2026):** testamos na prática e a API pública de busca (`/sites/MLB/search`) está bloqueada para aplicações comuns desde abril/2025 — retorna 403 mesmo com um access_token OAuth válido gerado via app registrado em developers.mercadolivre.com.br. O programa de afiliados do ML também nunca teve API oficial pra geração de link ou busca de produto (confirmado por múltiplos relatos de outros desenvolvedores/afiliados). Ou seja, não existe hoje um caminho de API pra descoberta automática de ofertas.
+
+**Solução adotada:** descoberta via **navegação assistida** — Claude acessa `mercadolivre.com.br/ofertas` (filtrável por categoria, ex: `?category=MLB1574` para Casa/Móveis/Decoração) como um visitante normal e extrai nota, desconto, vendas e link de cada produto direto da página. Isso não esbarra no bloqueio porque não chama a API de busca. A limitação é que essa etapa precisa de uma sessão ativa (navegador conectado), então roda em horários agendados em vez de ser um serviço 24/7 no VPS — o restante do pipeline (link de afiliado, imagem, copy, envio, painel) continua totalmente automatizado no VPS.
+- Conversão de link de afiliado: parâmetro de rastreio anexado à URL (nome/valor configurados no `.env`, obtidos no painel de afiliados do ML), não uma chamada de API.
 
 ### Shopee
 - O programa de afiliados da Shopee **não tem API pública robusta e aberta** como o ML; costuma depender do **Shopee Affiliate/Involve Asia/portal próprio**, com termos que restringem automação de captura de links e scraping.

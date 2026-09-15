@@ -1,12 +1,13 @@
 import { config } from "./config.js";
-import { searchOffers } from "./scrapers/mercadolivre.js";
+import { loadDiscoveredOffers } from "./scrapers/offers-input.js";
 import { filterOffers } from "./scrapers/filter.js";
 import { toAffiliateLink } from "./affiliate/mercadolivre.js";
 
 async function main() {
-  console.log(`Buscando: "${config.ml.searchQuery}"...`);
-  const offers = await searchOffers(config.ml.searchQuery, config.ml.categoryId, config.ml.accessToken);
-  console.log(`${offers.length} resultado(s) encontrado(s) na busca.`);
+  const inputPath = process.argv[2] ?? "data/offers.example.json";
+  console.log(`Carregando ofertas de: ${inputPath}`);
+  const offers = await loadDiscoveredOffers(inputPath);
+  console.log(`${offers.length} oferta(s) carregada(s).`);
 
   const selected = filterOffers(offers, {
     minDiscountPercent: config.ml.minDiscountPercent,
