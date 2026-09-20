@@ -4,6 +4,8 @@ import fs from "node:fs/promises";
 export interface QueueItem {
   text: string;
   imagePath?: string | null;
+  /** Só pra leitura humana em logs/prévia (ex: data/pending-send.json) — não é usado no envio. */
+  title?: string;
 }
 
 const MIN_DELAY_MS = 28_000;

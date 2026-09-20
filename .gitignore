@@ -9,3 +9,4 @@ backend/data/whatsapp-qr.png
 backend/.wwebjs_cache/
 backend/data/offers.json
 backend/data/offers.test-*.json
+backend/data/pending-send.json*
