@@ -43,11 +43,14 @@ async function main() {
 /**
  * Só conecta e mantém a sessão aberta até você escanear o QR (salvo em
  * data/whatsapp-qr.png). Depois disso a sessão fica salva em
- * data/.wwebjs_auth e os próximos comandos não pedem QR de novo.
+ * data/baileys-auth e os próximos comandos não pedem QR de novo.
  */
 async function runWhatsAppLogin() {
-  console.log("Conectando ao WhatsApp Web... aguarde o QR code em data/whatsapp-qr.png");
+  console.log("Conectando ao WhatsApp... aguarde o QR code em data/whatsapp-qr.png");
   await connectWhatsApp();
+  // Pequena folga antes do exit: garante que qualquer creds.update disparado
+  // bem no instante do "open" já terminou de gravar em disco.
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   console.log("Sessão pronta e salva. Pode rodar --whatsapp-send agora.");
   process.exit(0);
 }
@@ -97,15 +100,16 @@ async function runDiscoveryBatch(inputPath: string, whatsappGroupName?: string) 
   if (!whatsappGroupName) return;
 
   console.log(`Conectando ao WhatsApp para enviar no grupo "${whatsappGroupName}"...`);
-  await connectWhatsApp();
+  const sock = await connectWhatsApp();
   const group = await findGroupByName(whatsappGroupName);
   if (!group) {
-    throw new Error(`Grupo "${whatsappGroupName}" não encontrado entre os chats do WhatsApp conectado.`);
+    throw new Error(`Grupo "${whatsappGroupName}" não encontrado entre os grupos do WhatsApp conectado.`);
   }
 
   console.log(`Enviando ${queue.length} oferta(s) para o grupo, com delay entre mensagens...`);
   await sendQueueToGroup(
-    group,
+    sock,
+    group.id,
     queue,
     (i, item) => console.log(`  [${i + 1}/${queue.length}] enviado: ${item.text.slice(0, 40)}...`),
     (i, item, err) => console.error(`  [${i + 1}/${queue.length}] falhou: ${err.message}`)

@@ -1,7 +1,5 @@
-import pkg from "whatsapp-web.js";
-import type { Chat } from "whatsapp-web.js";
-
-const { MessageMedia } = pkg;
+import type { WASocket } from "@whiskeysockets/baileys";
+import fs from "node:fs/promises";
 
 export interface QueueItem {
   text: string;
@@ -20,12 +18,14 @@ function sleep(ms: number): Promise<void> {
 }
 
 /**
- * Envia os itens da fila um a um pro grupo, com delay aleatório de 28-45s
- * entre mensagens (reduz padrão robótico, conforme risco descrito na
- * arquitetura do projeto). Continua a fila mesmo se um item falhar.
+ * Envia os itens da fila um a um pro grupo (por groupId, formato
+ * "xxxxx@g.us"), com delay aleatório de 28-45s entre mensagens (reduz
+ * padrão robótico, conforme risco descrito na arquitetura do projeto).
+ * Continua a fila mesmo se um item falhar.
  */
 export async function sendQueueToGroup(
-  chat: Chat,
+  sock: WASocket,
+  groupId: string,
   items: QueueItem[],
   onItemSent?: (index: number, item: QueueItem) => void,
   onItemError?: (index: number, item: QueueItem, error: Error) => void
@@ -34,10 +34,10 @@ export async function sendQueueToGroup(
     const item = items[i];
     try {
       if (item.imagePath) {
-        const media = MessageMedia.fromFilePath(item.imagePath);
-        await chat.sendMessage(media, { caption: item.text });
+        const image = await fs.readFile(item.imagePath);
+        await sock.sendMessage(groupId, { image, caption: item.text });
       } else {
-        await chat.sendMessage(item.text);
+        await sock.sendMessage(groupId, { text: item.text });
       }
       onItemSent?.(i, item);
     } catch (err) {

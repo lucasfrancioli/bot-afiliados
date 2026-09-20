@@ -4,5 +4,8 @@ dist/
 *.log
 backend/data/generated/
 backend/data/.wwebjs_auth/
+backend/data/baileys-auth/
 backend/data/whatsapp-qr.png
 backend/.wwebjs_cache/
+backend/data/offers.json
+backend/data/offers.test-*.json
