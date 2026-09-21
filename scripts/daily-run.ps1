@@ -34,7 +34,7 @@ $allowedTools = @(
     "mcp__claude-in-chrome__browser_batch",
     "mcp__claude-in-chrome__list_connected_browsers",
     "mcp__plugin_telegram_telegram__reply",
-    "Write(backend/data/offers.json)",
+    "Edit(backend/data/offers.json)",
     "Bash(cd backend && npm run dev -- --prepare*)"
 ) -join " "
 
@@ -68,4 +68,10 @@ Se a etapa 1 ou 3 falhar de um jeito que trava tudo, reporte isso claramente no 
 de insistir tentando de novo sozinho.
 '@
 
-claude -p --allowedTools $allowedTools $prompt *>&1 | Tee-Object -FilePath $logFile
+# O prompt precisa vir ANTES de --allowedTools -- --allowedTools e uma
+# opcao variadica (aceita varios valores) e engole qualquer coisa depois
+# dela, inclusive o prompt, se ele vier depois. "--" nao resolve isso aqui.
+# --chrome: sem essa flag, a sessao headless nem tenta conectar no
+# navegador -- as ferramentas mcp__claude-in-chrome__* nao ficam disponiveis
+# de jeito nenhum, mesmo estando na lista de --allowedTools.
+claude -p $prompt --chrome --allowedTools $allowedTools *>&1 | Tee-Object -FilePath $logFile
