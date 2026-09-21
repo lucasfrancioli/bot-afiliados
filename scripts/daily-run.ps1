@@ -43,6 +43,12 @@ Rode a etapa de PREPARO (nao envio) da automacao diaria do bot de afiliados. Sig
 deste repo. Voce NAO tem permissao pra tocar no WhatsApp nessa execucao -- isso e proposital,
 nem tente.
 
+REGRA OBRIGATORIA, sem excecao: seu ULTIMO passo, sempre, e chamar a ferramenta de reply do
+plugin telegram (chat_id "8685488954"). Isso vale tanto se tudo der certo quanto se travar logo
+no passo 1 (ex: navegador desconectado) -- nunca termine so respondendo em texto, sem chamar a
+ferramenta de fato. Ninguem le o que voce responde em texto aqui; so o que voce manda pela
+ferramenta chega em algum lugar.
+
 1. Navegue no Chrome ate mercadolivre.com.br/ofertas, filtrando pela categoria Casa, Moveis e
    Decoracao. Colete 5 produtos bons: priorize selo "Oferta Imperdivel" ou desconto de 40% ou
    mais, com nota 4.5+ e bom volume de avaliacoes (evite produtos com poucas avaliacoes). Para
@@ -74,4 +80,4 @@ de insistir tentando de novo sozinho.
 # --chrome: sem essa flag, a sessao headless nem tenta conectar no
 # navegador -- as ferramentas mcp__claude-in-chrome__* nao ficam disponiveis
 # de jeito nenhum, mesmo estando na lista de --allowedTools.
-claude -p $prompt --chrome --allowedTools $allowedTools *>&1 | Tee-Object -FilePath $logFile
+claude -p $prompt --chrome --allowedTools $allowedTools *>&1 | Tee-Object -FilePath $logFile -Encoding utf8
